@@ -1,0 +1,40 @@
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "synthetix-sdk"
+version = "0.1.1"
+description = "Python SDK for Synthetix V4 perpetual futures trading"
+license = "MIT"
+authors = ["synthetix-team <team@synthetix.io>"]
+repository = "https://github.com/Synthetixio/synthetix-sdk"
+packages = [{include = "synthetix"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.31.0"
+eth-account = ">=0.10.0,<0.14.0"
+websockets = ">=12.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8,<10"
+pytest-asyncio = ">=0.23"
+pytest-timeout = "^2.0"
+python-dotenv = "^1.0"
+ruff = ">=0.4"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+timeout = 30
+markers = [
+    "xfail: known SDK or server bug",
+    "integration: requires network access to API endpoints",
+]
