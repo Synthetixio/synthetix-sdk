@@ -1,0 +1,45 @@
+"""
+Fetch balance update history (deposits, withdrawals, transfers) via WebSocket.
+
+Requires: PRIVATE_KEY environment variable.
+"""
+
+import asyncio
+import os
+
+from dotenv import load_dotenv
+
+from synthetix import Synthetix
+
+load_dotenv()
+
+
+async def main():
+    snx = Synthetix(
+        private_key=os.environ["PRIVATE_KEY"],
+        rest_url=os.environ.get("REST_URL_OVERRIDE"),
+        ws_url=os.environ.get("WS_URL_OVERRIDE"),
+    )
+    print(f"Wallet:     {snx.address}")
+    print(f"Subaccount: {snx.subaccount_id}\n")
+
+    result = await snx.ws_get_balance_updates()
+    updates = result.get("balanceUpdates", [])
+    print(f"Balance updates: {len(updates)} entries\n")
+
+    for u in updates[:20]:
+        gross = u.get("grossAmount", u.get("amount", "?"))
+        fee = u.get("fee", "0")
+        print(
+            f"  {u.get('timestamp', '?')}  {u.get('action', '?'):20s}"
+            f"  amount={u.get('amount', '?'):>14s}"
+            f"  fee={fee:>10s}"
+            f"  gross={gross:>14s}"
+            f"  {u.get('collateral', '?')}"
+        )
+
+    await snx.close()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
