@@ -1,0 +1,70 @@
+[build-system]
+requires = ["hatchling==1.29.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "synthetix-sdk"
+version = "0.4.0"
+description = "Official Python client for the Synthetix V4 perpetual futures exchange — REST + WebSocket, EIP-712 signing built in"
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+authors = [{ name = "synthetix-team", email = "team@synthetix.io" }]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+dependencies = [
+    "requests>=2.31.0,<3.0.0",
+    "eth-account>=0.10.0,<0.14.0",
+    "websockets>=12.0",
+]
+
+[project.urls]
+# URLs point at the public repo (synthetix-sdk), not the dev repo, since
+# integrators can't access the dev repo. Sync workflow's sed rename is a
+# no-op on these lines.
+Homepage = "https://github.com/Synthetixio/synthetix-sdk"
+Repository = "https://github.com/Synthetixio/synthetix-sdk"
+Documentation = "https://developers.synthetix.io/"
+Changelog = "https://github.com/Synthetixio/synthetix-sdk/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/Synthetixio/synthetix-sdk/issues"
+Security = "https://github.com/Synthetixio/synthetix-sdk/security/policy"
+
+[dependency-groups]
+dev = [
+    "pytest>=8,<10",
+    "pytest-asyncio>=0.23",
+    "pytest-timeout>=2.0,<3.0",
+    "python-dotenv>=1.0,<2.0",
+    "ruff>=0.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["synthetix"]
+
+[tool.uv]
+exclude-newer = "7 days"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+timeout = 30
+markers = [
+    "xfail: known SDK or server bug",
+    "integration: requires network access to API endpoints",
+]
